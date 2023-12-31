@@ -45,6 +45,15 @@ class Server:
 
         return self.__dataset
 
+     @staticmethod
+    def assert_positive_integer_type(value: int) -> None:
+        """
+        Asserts that the value is a positive integer.
+        Args:
+            value (int): The value to be asserted.
+        """
+        assert type(value) is int and value > 0
+
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         """return the appropriate page of the dataset"""
         assert type(page) is int and page > 0
@@ -64,30 +73,14 @@ class Server:
 def get_hyper(self, page: int = 1, page_size: int = 10) -> dict:
         """returns a dictionary containing the following key-value pairs
         """
-        assert type(page) is int and page > 0
-        assert type(page_size) is int and page_size > 0
-
+        total_pages = len(self.dataset()) // page_size + 1
         data = self.get_page(page, page_size)
-        total_pages = math.ceil(len(self.dataset()) / page_size)
-
-        start_index, end_index = index_range(page, page_size)
-
-        # estimating the next page
-        if (page < total_pages):
-            next_page = page+1
-        else:
-            next_page = None
-
-        # estimating the previous page
-        if (page == 1):
-            prev_page = None
-        else:
-            prev_page = page - 1
-
-        return {'page_size': len(data),
-                'page': page,
-                'data': data,
-                'next_page': next_page,
-                'prev_page': prev_page,
-                'total_pages': total_pages
-                }
+        info = {
+            "page": page,
+            "page_size": page_size if page_size <= len(data) else len(data),
+            "total_pages": total_pages,
+            "data": data,
+            "prev_page": page - 1 if page > 1 else None,
+            "next_page": page + 1 if page + 1 <= total_pages else None
+        }
+        return info
