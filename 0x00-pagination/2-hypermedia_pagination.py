@@ -15,15 +15,7 @@ total_pages: the total number of pages in the dataset as an integer
 import csv
 import math
 from typing import List, Tuple
-
-
-def index_range(page, page_size):
-    """start index and an end index
-    corresponding to the range of indexes
-    """
-    start_index = (page - 1) * page_size
-    end_index = start_index + page_size
-    return (start_index, end_index)
+index_range = __import__('0-simple_helper_function').index_range
 
 
 class Server:
@@ -45,6 +37,7 @@ class Server:
 
         return self.__dataset
 
+
      @staticmethod
     def assert_positive_integer_type(value: int) -> None:
         """
@@ -53,6 +46,7 @@ class Server:
             value (int): The value to be asserted.
         """
         assert type(value) is int and value > 0
+
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         """return the appropriate page of the dataset"""
